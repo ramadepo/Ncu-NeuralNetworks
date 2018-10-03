@@ -3,8 +3,10 @@ from random import shuffle
 
 
 class FileManager():
-    def __init__(self):
+    def __init__(self, comboBox_filename):
         self.detect_files()
+        for file in self.file_list:
+            comboBox_filename.addItem(file)
 
     def detect_files(self):
         self.file_list = []
