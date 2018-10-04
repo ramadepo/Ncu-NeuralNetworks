@@ -25,7 +25,7 @@ class CalculateThread(QThread):
 
     def run(self):
         for i in range(self.calculator.converger_condition):
-            self.calculator.calculate()
+            self.calculator.calculate(i)
             time.sleep(0.0000000000000000000000000000000000000000000001)
         time.sleep(0.1)
         self.calculator.after_calculate()

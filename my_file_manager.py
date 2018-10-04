@@ -18,6 +18,8 @@ class FileManager():
     def scan_file(self, filename):
         self.x_max = -9999
         self.x_min = 9999
+        self.y_max = -9999
+        self.y_min = 9999
         tmp1 = {"xs": [], "ys": [], "results": []}
         tmp2 = {"xs": [], "ys": [], "results": []}
 
@@ -31,6 +33,10 @@ class FileManager():
                     self.x_min = float(x)
                 if float(x) > self.x_max:
                     self.x_max = float(x)
+                if float(y) < self.y_min:
+                    self.y_min = float(y)
+                if float(y) > self.y_max:
+                    self.y_max = float(y)
                 if result == "1":
                     tmp1["xs"].append(float(x))
                     tmp1["ys"].append(float(y))

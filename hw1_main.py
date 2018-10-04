@@ -21,7 +21,7 @@ class Main(QMainWindow, window.Ui_MainWindow):
             self.train_picture, "training data")
         self.plot_test_thread = PlotThread(self.test_picture, "testing data")
         self.calculator = Calculaor(
-            self.train_picture, self.test_picture, self.fileManager)
+            self.train_picture, self.test_picture)
         self.calculate_thread = CalculateThread(self.calculator)
         self.started = False
 
@@ -35,14 +35,14 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.started = True
         self.fileManager.scan_file(self.comboBox_filename.currentText())
         self.train_picture.pre_plot(
-            self.fileManager.train1, self.fileManager.train2)
+            self.fileManager.train1, self.fileManager.train2, self.fileManager.x_min, self.fileManager.x_max, self.fileManager.y_min, self.fileManager.y_max)
         self.test_picture.pre_plot(
-            self.fileManager.test1, self.fileManager.test2)
+            self.fileManager.test1, self.fileManager.test2, self.fileManager.x_min, self.fileManager.x_max, self.fileManager.y_min, self.fileManager.y_max)
 
         self.textArea_log.append("work on !")
 
         self.calculator.initialize(float(self.lineEdit_studyScale.text()), int(
-            self.lineEdit_convergeCondition.text()))
+            self.lineEdit_convergeCondition.text()), self.fileManager)
 
         self.plot_train_thread.start()
         self.plot_test_thread.start()

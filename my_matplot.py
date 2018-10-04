@@ -17,24 +17,28 @@ class PlotCanvas(FigureCanvas):
         FigureCanvas.updateGeometry(self)
         self.changed = False
 
-    def pre_plot(self, data1, data2):
+    def pre_plot(self, data1, data2, x_min, x_max, y_min, y_max):
         self.xs1 = data1["xs"]
         self.xs2 = data2["xs"]
         self.ys1 = data1["ys"]
         self.ys2 = data2["ys"]
+        self.x_min = x_min - 1
+        self.x_max = x_max + 1
+        self.y_min = y_min - 1
+        self.y_max = y_max + 1
 
-    def get_weight_interval(self, w0, w1, w2, x_min, x_max):
+    def get_weight_interval(self, w0, w1, w2):
         self.w0 = w0
         self.w1 = w1
         self.w2 = w2
-        self.x_min = x_min
-        self.x_max = x_max
         self.changed = True
 
     def plot(self, plot_title):
         #ax = self.figure.add_subplot(111)
         self.axes.clear()
         self.axes.set_title(plot_title)
+        self.axes.set_xlim(self.x_min, self.x_max)
+        self.axes.set_ylim(self.y_min, self.y_max)
         self.axes.plot(self.xs1, self.ys1, '.')
         self.axes.plot(self.xs2, self.ys2, 'x')
         x = np.linspace(self.x_min, self.x_max, 2)
