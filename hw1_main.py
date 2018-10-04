@@ -7,6 +7,7 @@ from my_matplot import PlotCanvas
 from my_file_manager import FileManager
 import window
 from my_threads import PlotThread, CalculateThread
+from my_calculator import Calculaor
 
 
 class Main(QMainWindow, window.Ui_MainWindow):
@@ -16,8 +17,12 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.fileManager = FileManager(self.comboBox_filename)
         self.train_picture = PlotCanvas(self.plot_trainingData, 5, 5, 100)
         self.test_picture = PlotCanvas(self.plot_testData, 5, 5, 100)
-        self.plot_thread = PlotThread(self.train_picture, self.test_picture)
-        self.calculate_thread = CalculateThread()
+        self.plot_train_thread = PlotThread(
+            self.train_picture, "training data")
+        self.plot_test_thread = PlotThread(self.test_picture, "testing data")
+        self.calculator = Calculaor(
+            self.train_picture, self.test_picture, self.fileManager)
+        self.calculate_thread = CalculateThread(self.calculator)
         self.started = False
 
     def start_calculate(self):
@@ -33,13 +38,20 @@ class Main(QMainWindow, window.Ui_MainWindow):
             self.fileManager.train1, self.fileManager.train2)
         self.test_picture.pre_plot(
             self.fileManager.test1, self.fileManager.test2)
+
         self.textArea_log.append("work on !")
-        self.plot_thread.start()
+
+        self.calculator.initialize(float(self.lineEdit_studyScale.text()), int(
+            self.lineEdit_convergeCondition.text()))
+
+        self.plot_train_thread.start()
+        self.plot_test_thread.start()
         self.calculate_thread.start()
 
     def stop_calculate(self):
         self.started = False
-        self.plot_thread.terminate()
+        self.plot_train_thread.terminate()
+        self.plot_test_thread.terminate()
         self.calculate_thread.terminate()
 
 

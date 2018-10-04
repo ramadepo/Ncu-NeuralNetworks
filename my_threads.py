@@ -3,24 +3,32 @@ import time
 
 
 class PlotThread(QThread):
-    def __init__(self, train_picture, test_picture):
+    def __init__(self, picture, name):
         QThread.__init__(self)
-        self.train_picture = train_picture
-        self.test_picture = test_picture
+        self.picture = picture
+        self. name = name
 
     def run(self):
         while True:
-            self.train_picture.plot("training data")
-            self.test_picture.plot("training data")
-            print("oh")
-            time.sleep(0.2)
+            if self.picture.changed:
+                self.picture.plot(self.name)
+                print(self.name)
+                self.picture.draw()
+                print(self.picture.w0, self.picture.w1, self.picture.w2)
+            time.sleep(0.0000000000000000000000000000000000000000000001)
 
 
 class CalculateThread(QThread):
-    def __init__(self):
+    def __init__(self, calculator):
         QThread.__init__(self)
+        self.calculator = calculator
 
     def run(self):
+        for i in range(self.calculator.converger_condition):
+            self.calculator.calculate()
+            time.sleep(0.0000000000000000000000000000000000000000000001)
+        time.sleep(0.1)
+        self.calculator.after_calculate()
+
         while True:
-            print("ho")
-            time.sleep(0.3)
+            time.sleep(0.01)

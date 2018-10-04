@@ -16,6 +16,8 @@ class FileManager():
         self.file_list.sort()
 
     def scan_file(self, filename):
+        self.x_max = -9999
+        self.x_min = 9999
         tmp1 = {"xs": [], "ys": [], "results": []}
         tmp2 = {"xs": [], "ys": [], "results": []}
 
@@ -25,6 +27,10 @@ class FileManager():
         for line in lines:
             if len(line) > 1:
                 x, y, result = line.split(' ')
+                if float(x) < self.x_min:
+                    self.x_min = float(x)
+                if float(x) > self.x_max:
+                    self.x_max = float(x)
                 if result == "1":
                     tmp1["xs"].append(float(x))
                     tmp1["ys"].append(float(y))
