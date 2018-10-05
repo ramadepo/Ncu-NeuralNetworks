@@ -11,11 +11,16 @@ class Calculaor():
     def initialize(self, study_scale, converger_condition, fileManager):
         self.study_scale = study_scale
         self.converger_condition = converger_condition
+        self.times = 0
+        self.ratio_train = 0
+        self.ratio_test = 0
         self.w0 = random.uniform(-1, 1)
         self.w1 = random.uniform(-1, 1)
         self.w2 = random.uniform(-1, 1)
         self.train1 = fileManager.train1
         self.train2 = fileManager.train2
+        self.test1 = fileManager.test1
+        self.test2 = fileManager.test2
         self.data_merge()
 
     def data_merge(self):
@@ -35,6 +40,22 @@ class Calculaor():
             tmp.append(self.train2["results"][i])
             self.train_data.append(tmp)
         shuffle(self.train_data)
+
+        self.test_data = []
+        for i in range(len(self.test1["results"])):
+            tmp = []
+            tmp.append(-1)
+            tmp.append(self.test1["xs"][i])
+            tmp.append(self.test1["ys"][i])
+            tmp.append(self.test1["results"][i])
+            self.test_data.append(tmp)
+        for i in range(len(self.test2["results"])):
+            tmp = []
+            tmp.append(-1)
+            tmp.append(self.test2["xs"][i])
+            tmp.append(self.test2["ys"][i])
+            tmp.append(self.test2["results"][i])
+            self.test_data.append(tmp)
 
     def calculate(self, i):
         now = i % len(self.train_data)
@@ -59,10 +80,37 @@ class Calculaor():
 
         self.transfer_data_train()
         self.transfer_data_test()
+        self.times += 1
+        if self.times % 100 == 0:
+            self.ratio_calculate()
 
     def after_calculate(self):
         self.transfer_data_train()
         self.transfer_data_test()
+        self.ratio_calculate()
+
+    def ratio_calculate(self):
+        tmp_w = np.array([self.w0, self.w1, self.w2])
+
+        count = len(self.train_data)
+        right = 0
+        for i in range(count):
+            tmp_x = np.array(self.train_data[i][0:3])
+            if np.dot(tmp_w, tmp_x) >= 0 and self.train_data[i][3] == 1:
+                right += 1
+            elif np.dot(tmp_w, tmp_x) <= 0 and (self.train_data[i][3] == 0 or self.train_data[i][3] == 2):
+                right += 1
+        self.ratio_train = (100 * right) / count
+
+        count = len(self.test_data)
+        right = 0
+        for i in range(count):
+            tmp_x = np.array(self.test_data[i][0:3])
+            if np.dot(tmp_w, tmp_x) >= 0 and self.test_data[i][3] == 1:
+                right += 1
+            elif np.dot(tmp_w, tmp_x) <= 0 and (self.test_data[i][3] == 0 or self.test_data[i][3] == 2):
+                right += 1
+        self.ratio_test = (100 * right) / count
 
     def transfer_data_train(self):
         self.train_picture.get_weight_interval(
