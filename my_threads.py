@@ -28,8 +28,8 @@ class CalculateThread(QThread):
             time.sleep(0.0000000000000000000000000000000000000000000001)
         time.sleep(0.1)
         self.calculator.after_calculate()
-        self.log.append("Calculate done.")
-        self.log.last = "Calculate done."
+        self.log.append("Calculation done. Please click Start button.")
+        self.log.last = "Calculation done. Please click Start button."
         while True:
             time.sleep(0.01)
 
@@ -47,8 +47,8 @@ class DisplayThread(QThread):
             self.label_train.setText(
                 str(int(self.calculator.ratio_train)) + "%")
             self.label_test.setText(str(int(self.calculator.ratio_test)) + "%")
-            w0 = str(round(self.calculator.w0, 2))
-            w1 = str(round(self.calculator.w1, 2))
-            w2 = str(round(self.calculator.w2, 2))
+            w0 = str(round(self.calculator.w0, 5))
+            w1 = str(round(self.calculator.w1, 5))
+            w2 = str(round(self.calculator.w2, 5))
             self.label_weight.setText("[ " + w0 + ", " + w1 + ", " + w2 + " ]")
             time.sleep(0.0000000000000000000000000000000000000000000001)

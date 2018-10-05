@@ -30,14 +30,21 @@ class Main(QMainWindow, window.Ui_MainWindow):
 
     def start_calculate(self):
         if self.started:
-            if self.textArea_log.last != "Calculate done.":
+            if self.textArea_log.last != "Calculation done. Please click Start button.":
                 self.textArea_log.append(
-                    "Process is calculating, so start button is locked.")
-                self.textArea_log.last = "Process is calculating, so start button is locked."
+                    "程式計算中...Start按鈕已鎖定")
+                self.textArea_log.last = "程式計算中，Start按鈕已鎖定"
             else:
                 self.stop_calculate()
         else:
-            self.calculate()
+            if len(self.lineEdit_studyScale.text()) < 1:
+                self.textArea_log.append("請輸入學習率")
+                self.textArea_log.last = "請輸入學習率"
+            elif len(self.lineEdit_convergeCondition.text()) < 1:
+                self.textArea_log.append("請輸入收斂條件(迭代次數)")
+                self.textArea_log.last = "請輸入收斂條件(迭代次數)"
+            else:
+                self.calculate()
 
     def calculate(self):
         self.started = True
@@ -47,8 +54,8 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.test_picture.pre_plot(
             self.fileManager.test1, self.fileManager.test2, self.fileManager.x_min, self.fileManager.x_max, self.fileManager.y_min, self.fileManager.y_max)
 
-        self.textArea_log.append("work on !")
-        self.textArea_log.last = "work on !"
+        self.textArea_log.append("開始計算...")
+        self.textArea_log.last = "開始計算..."
 
         self.calculator.initialize(float(self.lineEdit_studyScale.text()), int(
             self.lineEdit_convergeCondition.text()), self.fileManager)
@@ -64,8 +71,8 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.plot_test_thread.terminate()
         self.calculate_thread.terminate()
         self.textArea_log.append(
-            "Calculation is shut down. Please click start button to restart calculation.")
-        self.textArea_log.last = "Calculation is shut down. Please click start button to restart calculation."
+            "程式計算完畢，Start按鈕已解鎖")
+        self.textArea_log.last = "程式計算完畢，Start按鈕已解鎖"
 
 
 if __name__ == "__main__":
