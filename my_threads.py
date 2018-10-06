@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, pyqtSignal
 import time
 
 
@@ -17,10 +17,12 @@ class PlotThread(QThread):
 
 
 class CalculateThread(QThread):
-    def __init__(self, calculator, log):
+    log = pyqtSignal(str)
+
+    def __init__(self, main, calculator):
         QThread.__init__(self)
         self.calculator = calculator
-        self.log = log
+        self.main = main
 
     def run(self):
         for i in range(self.calculator.converger_condition):
@@ -28,27 +30,28 @@ class CalculateThread(QThread):
             time.sleep(0.0000000000000000000000000000000000000000000001)
         time.sleep(0.1)
         self.calculator.after_calculate()
-        self.log.append("Calculation done. Please click Start button.")
-        self.log.last = "Calculation done. Please click Start button."
+        self.log.emit("Calculation done. Please click Start button.")
         while True:
             time.sleep(0.01)
 
 
 class DisplayThread(QThread):
-    def __init__(self, label_train, label_test, label_weight, calculator):
+    ratio = pyqtSignal(str, str)
+    weight = pyqtSignal(str, str, str)
+    progress = pyqtSignal(int)
+
+    def __init__(self, main, calculator):
         QThread.__init__(self)
-        self.label_train = label_train
-        self.label_test = label_test
-        self.label_weight = label_weight
+        self.main = main
         self.calculator = calculator
 
     def run(self):
         while True:
-            self.label_train.setText(
-                str(int(self.calculator.ratio_train)) + "%")
-            self.label_test.setText(str(int(self.calculator.ratio_test)) + "%")
+            self.ratio.emit(str(int(self.calculator.ratio_train)) +
+                            "%", str(int(self.calculator.ratio_test)) + "%")
             w0 = str(round(self.calculator.w0, 5))
             w1 = str(round(self.calculator.w1, 5))
             w2 = str(round(self.calculator.w2, 5))
-            self.label_weight.setText("[ " + w0 + ", " + w1 + ", " + w2 + " ]")
+            self.weight.emit(w0, w1, w2)
+            self.progress.emit(self.calculator.progress_percent)
             time.sleep(0.0000000000000000000000000000000000000000000001)

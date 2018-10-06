@@ -22,27 +22,25 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.plot_test_thread = PlotThread(self.test_picture, "testing data")
         self.calculator = Calculaor(
             self.train_picture, self.test_picture)
-        self.calculate_thread = CalculateThread(
-            self.calculator, self.textArea_log)
-        self.display_thread = DisplayThread(
-            self.label_trainingPercent, self.label_testPercent, self.label_weightValue, self.calculator)
+        self.calculate_thread = CalculateThread(self, self.calculator)
+        self.calculate_thread.log.connect(self.add_log)
+        self.display_thread = DisplayThread(self, self.calculator)
+        self.display_thread.ratio.connect(self.set_ratio)
+        self.display_thread.weight.connect(self.set_weight)
+        self.display_thread.progress.connect(self.set_progress)
         self.started = False
 
     def start_calculate(self):
         if self.started:
             if self.textArea_log.last != "Calculation done. Please click Start button.":
-                self.textArea_log.append(
-                    "程式計算中...Start按鈕已鎖定")
-                self.textArea_log.last = "程式計算中，Start按鈕已鎖定"
+                self.add_log("程式計算中，Start按鈕已鎖定")
             else:
                 self.stop_calculate()
         else:
             if len(self.lineEdit_studyScale.text()) < 1:
-                self.textArea_log.append("請輸入學習率")
-                self.textArea_log.last = "請輸入學習率"
+                self.add_log("請輸入學習率")
             elif len(self.lineEdit_convergeCondition.text()) < 1:
-                self.textArea_log.append("請輸入收斂條件(迭代次數)")
-                self.textArea_log.last = "請輸入收斂條件(迭代次數)"
+                self.add_log("請輸入收斂條件(迭代次數)")
             else:
                 self.calculate()
 
@@ -54,8 +52,7 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.test_picture.pre_plot(
             self.fileManager.test1, self.fileManager.test2, self.fileManager.x_min, self.fileManager.x_max, self.fileManager.y_min, self.fileManager.y_max)
 
-        self.textArea_log.append("開始計算...")
-        self.textArea_log.last = "開始計算..."
+        self.add_log("開始計算...")
 
         self.calculator.initialize(float(self.lineEdit_studyScale.text()), int(
             self.lineEdit_convergeCondition.text()), self.fileManager)
@@ -70,9 +67,23 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.plot_train_thread.terminate()
         self.plot_test_thread.terminate()
         self.calculate_thread.terminate()
-        self.textArea_log.append(
-            "程式計算完畢，Start按鈕已解鎖")
-        self.textArea_log.last = "程式計算完畢，Start按鈕已解鎖"
+        self.display_thread.terminate()
+        self.add_log("程式計算完畢，Start按鈕已解鎖")
+
+    def add_log(self, s):
+        self.textArea_log.append(s)
+        self.textArea_log.last = s
+
+    def set_ratio(self, train, test):
+        self.label_trainingPercent.setText(train)
+        self.label_testPercent.setText(test)
+
+    def set_weight(self, w0, w1, w2):
+        self.label_weightValue.setText(
+            "[ " + w0 + ", " + w1 + ", " + w2 + " ]")
+
+    def set_progress(self, progress):
+        self.progressBar_progress.setValue(progress)
 
 
 if __name__ == "__main__":

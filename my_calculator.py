@@ -80,6 +80,7 @@ class Calculaor():
 
         self.transfer_data_train()
         self.transfer_data_test()
+        self.progress_percent = int(i * 100 / self.converger_condition)
         self.times += 1
         if self.times % 100 == 0:
             self.ratio_calculate()
