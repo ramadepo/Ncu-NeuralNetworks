@@ -11,6 +11,7 @@ class Calculaor():
     def initialize(self, study_scale, converger_condition, fileManager):
         self.study_scale = study_scale
         self.converger_condition = converger_condition
+        self.progress_percent = 0
         self.times = 0
         self.ratio_train = 0
         self.ratio_test = 0
