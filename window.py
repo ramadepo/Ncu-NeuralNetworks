@@ -242,6 +242,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.pushButton.clicked['bool'].connect(MainWindow.start_calculate)
+        self.comboBox_filename.activated['QString'].connect(MainWindow.preview_picture)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

@@ -45,3 +45,13 @@ class PlotCanvas(FigureCanvas):
         y = ((self.w1 * x * (-1)) + self.w0) / self.w2
         self.axes.plot(x, y, 'r')
         self.changed = False
+
+    def subplot(self, plot_title):
+        #ax = self.figure.add_subplot(111)
+        self.axes.clear()
+        self.axes.set_title(plot_title)
+        self.axes.set_xlim(self.x_min, self.x_max)
+        self.axes.set_ylim(self.y_min, self.y_max)
+        self.axes.plot(self.xs1, self.ys1, '.')
+        self.axes.plot(self.xs2, self.ys2, 'x')
+        self.changed = False

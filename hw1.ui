@@ -518,8 +518,25 @@ background-color: rgb(100,100, 100);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>comboBox_filename</sender>
+   <signal>activated(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>preview_picture()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>26</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>74</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>start_calculate()</slot>
+  <slot>preview_picture()</slot>
  </slots>
 </ui>

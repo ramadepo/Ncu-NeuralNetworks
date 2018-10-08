@@ -8,6 +8,7 @@ from my_file_manager import FileManager
 import window
 from my_threads import PlotThread, CalculateThread, DisplayThread
 from my_calculator import Calculaor
+import time
 
 
 class Main(QMainWindow, window.Ui_MainWindow):
@@ -20,6 +21,7 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.plot_train_thread = PlotThread(
             self.train_picture, "training data")
         self.plot_test_thread = PlotThread(self.test_picture, "testing data")
+        self.preview_picture()
         self.calculator = Calculaor(
             self.train_picture, self.test_picture)
         self.calculate_thread = CalculateThread(self, self.calculator)
@@ -69,6 +71,17 @@ class Main(QMainWindow, window.Ui_MainWindow):
         self.calculate_thread.terminate()
         self.display_thread.terminate()
         self.add_log("程式計算完畢，Start按鈕已解鎖")
+
+    def preview_picture(self):
+        self.fileManager.scan_file(self.comboBox_filename.currentText())
+        self.train_picture.pre_plot(self.fileManager.train1, self.fileManager.train2, self.fileManager.x_min,
+                                    self.fileManager.x_max, self.fileManager.y_min, self.fileManager.y_max)
+        self.test_picture.pre_plot(self.fileManager.test1, self.fileManager.test2, self.fileManager.x_min,
+                                   self.fileManager.x_max, self.fileManager.y_min, self.fileManager.y_max)
+        self.train_picture.subplot("training data")
+        self.test_picture.subplot("test data")
+        self.train_picture.draw()
+        self.test_picture.draw()
 
     def add_log(self, s):
         self.textArea_log.append(s)
