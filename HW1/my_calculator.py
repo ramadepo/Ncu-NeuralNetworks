@@ -92,27 +92,20 @@ class Calculaor():
         self.ratio_calculate()
 
     def ratio_calculate(self):
+        self.ratio_train = self.get_percent(self.train_data)
+        self.ratio_test = self.get_percent(self.test_data)
+
+    def get_percent(self, data):
         tmp_w = np.array([self.w0, self.w1, self.w2])
-
-        count = len(self.train_data)
+        count = len(data)
         right = 0
         for i in range(count):
-            tmp_x = np.array(self.train_data[i][0:3])
-            if np.dot(tmp_w, tmp_x) >= 0 and self.train_data[i][3] == 1:
+            tmp_x = np.array(data[i][0:3])
+            if np.dot(tmp_w, tmp_x) >= 0 and data[i][3] == 1:
                 right += 1
-            elif np.dot(tmp_w, tmp_x) <= 0 and (self.train_data[i][3] == 0 or self.train_data[i][3] == 2):
+            elif np.dot(tmp_w, tmp_x) <= 0 and (data[i][3] == 0 or data[i][3] == 2):
                 right += 1
-        self.ratio_train = (100 * right) / count
-
-        count = len(self.test_data)
-        right = 0
-        for i in range(count):
-            tmp_x = np.array(self.test_data[i][0:3])
-            if np.dot(tmp_w, tmp_x) >= 0 and self.test_data[i][3] == 1:
-                right += 1
-            elif np.dot(tmp_w, tmp_x) <= 0 and (self.test_data[i][3] == 0 or self.test_data[i][3] == 2):
-                right += 1
-        self.ratio_test = (100 * right) / count
+        return (100 * right) / count
 
     def transfer_data_train(self):
         self.train_picture.get_weight_interval(
