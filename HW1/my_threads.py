@@ -30,7 +30,7 @@ class CalculateThread(QThread):
             time.sleep(0.0000000000000000000000000000000000000000000001)
         time.sleep(0.1)
         self.calculator.after_calculate()
-        self.log.emit("Calculation done. Please click Start button.")
+        self.log.emit("程式計算完畢，請點擊Done按鈕")
         while True:
             time.sleep(0.01)
 

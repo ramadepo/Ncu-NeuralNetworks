@@ -46,29 +46,23 @@ class FileManager():
                     tmp2["ys"].append(float(y))
                     tmp2["results"].append(float(result))
 
-        self.divide_test_train(tmp1, tmp2)
+        self.divide_data(tmp1, tmp2)
 
-    def divide_test_train(self, tmp1, tmp2):
+    def divide_data(self, tmp1, tmp2):
         self.test1 = {"xs": [], "ys": [], "results": []}
         self.train1 = {"xs": [], "ys": [], "results": []}
         self.test2 = {"xs": [], "ys": [], "results": []}
         self.train2 = {"xs": [], "ys": [], "results": []}
-        for i in range(len(tmp1["results"])):
-            if i <= (len(tmp1["results"])/3):
-                self.test1["xs"].append(tmp1["xs"][i])
-                self.test1["ys"].append(tmp1["ys"][i])
-                self.test1["results"].append(tmp1["results"][i])
-            else:
-                self.train1["xs"].append(tmp1["xs"][i])
-                self.train1["ys"].append(tmp1["ys"][i])
-                self.train1["results"].append(tmp1["results"][i])
+        self.devide_train_test(self.train1, self.test1, tmp1)
+        self.devide_train_test(self.train2, self.test2, tmp2)
 
-        for i in range(len(tmp2["results"])):
-            if i <= (len(tmp2["results"])/3):
-                self.test2["xs"].append(tmp2["xs"][i])
-                self.test2["ys"].append(tmp2["ys"][i])
-                self.test2["results"].append(tmp2["results"][i])
+    def devide_train_test(self, train, test, tmp):
+        for i in range(len(tmp["results"])):
+            if i <= (len(tmp["results"])/3):
+                test["xs"].append(tmp["xs"][i])
+                test["ys"].append(tmp["ys"][i])
+                test["results"].append(tmp["results"][i])
             else:
-                self.train2["xs"].append(tmp2["xs"][i])
-                self.train2["ys"].append(tmp2["ys"][i])
-                self.train2["results"].append(tmp2["results"][i])
+                train["xs"].append(tmp["xs"][i])
+                train["ys"].append(tmp["ys"][i])
+                train["results"].append(tmp["results"][i])
