@@ -28,6 +28,8 @@ class CalculateThread(QThread):
         for i in range(self.calculator.converger_condition):
             self.calculator.calculate(i)
             time.sleep(0.0000000000000000000000000000000000000000000001)
+
+        # calculation done
         time.sleep(0.1)
         self.calculator.after_calculate()
         self.log.emit("程式計算完畢，請點擊Done按鈕")
@@ -36,6 +38,7 @@ class CalculateThread(QThread):
 
 
 class DisplayThread(QThread):
+    # initialize signal
     ratio = pyqtSignal(str, str)
     weight = pyqtSignal(str, str, str)
     progress = pyqtSignal(int)
@@ -52,6 +55,8 @@ class DisplayThread(QThread):
             w0 = str(round(self.calculator.w0, 5))
             w1 = str(round(self.calculator.w1, 5))
             w2 = str(round(self.calculator.w2, 5))
+
+            # send the event to Main Thread to update the GUI label value
             self.weight.emit(w0, w1, w2)
             self.progress.emit(self.calculator.progress_percent)
             time.sleep(0.0000000000000000000000000000000000000000000001)

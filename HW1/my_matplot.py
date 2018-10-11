@@ -8,6 +8,7 @@ import numpy as np
 class PlotCanvas(FigureCanvas):
 
     def __init__(self, parent, width, height, dpi):
+        # initialize the object for plotting picture
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         FigureCanvas.__init__(self, fig)
@@ -18,6 +19,7 @@ class PlotCanvas(FigureCanvas):
         self.changed = False
 
     def pre_plot(self, data1, data2, x_min, x_max, y_min, y_max):
+        # load some essential data
         self.xs1 = data1["xs"]
         self.xs2 = data2["xs"]
         self.ys1 = data1["ys"]
@@ -28,12 +30,14 @@ class PlotCanvas(FigureCanvas):
         self.y_max = y_max + 1
 
     def get_weight_interval(self, w0, w1, w2):
+        # set the result line weight
         self.w0 = w0
         self.w1 = w1
         self.w2 = w2
         self.changed = True
 
     def plot(self, plot_title):
+        # plot the result line
         self.subplot(plot_title)
         x = np.linspace(self.x_min, self.x_max, 2)
         y = ((self.w1 * x * (-1)) + self.w0) / self.w2
@@ -41,6 +45,7 @@ class PlotCanvas(FigureCanvas):
         self.changed = False
 
     def subplot(self, plot_title):
+        # plot the data point
         self.axes.clear()
         self.axes.set_title(plot_title)
         self.axes.set_xlim(self.x_min, self.x_max)

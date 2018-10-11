@@ -9,6 +9,7 @@ class Calculaor():
         self.test_picture = test_picture
 
     def initialize(self, study_scale, converger_condition, fileManager):
+        # initialize essential variable
         self.study_scale = study_scale
         self.converger_condition = converger_condition
         self.progress_percent = 0
@@ -25,6 +26,7 @@ class Calculaor():
         self.data_merge()
 
     def data_merge(self):
+        # combine result 1 and 2 data then shuffle
         self.train_data = []
         for i in range(len(self.train1["results"])):
             tmp = []
@@ -57,9 +59,12 @@ class Calculaor():
             tmp.append(self.test2["ys"][i])
             tmp.append(self.test2["results"][i])
             self.test_data.append(tmp)
+        shuffle(self.test_data)
 
     def calculate(self, i):
         now = i % len(self.train_data)
+
+        # use dot to calculate the result of data point
         tmp_w = np.array([self.w0, self.w1, self.w2])
         tmp_x = np.array(self.train_data[now][0:3])
         if np.dot(tmp_w, tmp_x) >= 0:
@@ -67,6 +72,7 @@ class Calculaor():
         else:
             tmp_result = 2
 
+        # revise the wrong weight value
         if tmp_result != self.train_data[now][3]:
             if tmp_result == 1:
                 tmp_w = tmp_w - np.dot(tmp_x, self.study_scale)
@@ -79,23 +85,29 @@ class Calculaor():
             self.w1 = tmp_w[1]
             self.w2 = tmp_w[2]
 
-        self.transfer_data_train()
-        self.transfer_data_test()
+        # update value needed by GUI
+        self.transfer_data(self.train_picture)
+        self.transfer_data(self.test_picture)
         self.progress_percent = int(i * 100 / self.converger_condition)
+
+        # calculate correct ratio every 100 times
         self.times += 1
         if self.times % 100 == 0:
             self.ratio_calculate()
 
     def after_calculate(self):
-        self.transfer_data_train()
-        self.transfer_data_test()
+        # last update the result of calculation
+        self.transfer_data(self.train_picture)
+        self.transfer_data(self.test_picture)
         self.ratio_calculate()
 
     def ratio_calculate(self):
+        # calculate train and test correct ratio
         self.ratio_train = self.get_percent(self.train_data)
         self.ratio_test = self.get_percent(self.test_data)
 
     def get_percent(self, data):
+        # calculate the correct percent of data
         tmp_w = np.array([self.w0, self.w1, self.w2])
         count = len(data)
         right = 0
@@ -107,10 +119,6 @@ class Calculaor():
                 right += 1
         return (100 * right) / count
 
-    def transfer_data_train(self):
-        self.train_picture.get_weight_interval(
-            self.w0, self.w1, self.w2)
-
-    def transfer_data_test(self):
-        self.test_picture.get_weight_interval(
-            self.w0, self.w1, self.w2)
+    def transfer_data(self, picture):
+        # send the line weight to picture drawer
+        picture.get_weight_interval(self.w0, self.w1, self.w2)

@@ -4,11 +4,13 @@ from random import shuffle
 
 class FileManager():
     def __init__(self, comboBox_filename):
+        # set combo box list
         self.detect_files()
         for file in self.file_list:
             comboBox_filename.addItem(file)
 
     def detect_files(self):
+        # find all file in Dataset directory
         self.file_list = []
         for i in os.listdir("./DataSet"):
             if i.endswith(".txt"):
@@ -16,6 +18,7 @@ class FileManager():
         self.file_list.sort()
 
     def scan_file(self, filename):
+        # read selected file's data and set border value
         self.x_max = -9999
         self.x_min = 9999
         self.y_max = -9999
@@ -49,6 +52,7 @@ class FileManager():
         self.divide_data(tmp1, tmp2)
 
     def divide_data(self, tmp1, tmp2):
+        # initailize the variable to store initial data
         self.test1 = {"xs": [], "ys": [], "results": []}
         self.train1 = {"xs": [], "ys": [], "results": []}
         self.test2 = {"xs": [], "ys": [], "results": []}
@@ -57,6 +61,7 @@ class FileManager():
         self.devide_train_test(self.train2, self.test2, tmp2)
 
     def devide_train_test(self, train, test, tmp):
+        # devide data to train and test
         for i in range(len(tmp["results"])):
             if i <= (len(tmp["results"])/3):
                 test["xs"].append(tmp["xs"][i])
