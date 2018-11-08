@@ -27,7 +27,7 @@ class Calculaor():
         self.data_merge()
         self.rbfn_point = []
         for i in range(self.k):
-            self.rbfn_point.append(RBFN_Point())
+            self.rbfn_point.append(RBFN_Point(fileManager))
 
     def data_merge(self):
         # combine result 1 and 2 data then shuffle
@@ -182,8 +182,8 @@ class Calculaor():
         picture.get_weight_interval(self.w0, self.w1, self.w2)
 
 class RBFN_Point():
-    def __init__(self):
-        self.m = np.array([random.uniform(-1, 1), random.uniform(-1, 1)])
+    def __init__(self, fileManager):
+        self.m = np.array([random.uniform(fileManager.x_min, fileManager.x_max), random.uniform(fileManager.y_min, fileManager.y_max)])
         self.ro = random.uniform(1, 10)
 
     def set_m(self, m):
