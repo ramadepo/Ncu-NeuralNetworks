@@ -171,6 +171,9 @@ class Calculaor():
             self.done = True
             self.ratio_train = 100
             self.ratio_test = 100 - self.ratio_test
+        if self.ratio_train < 50:
+            self.ratio_train = 100 - self.ratio_train
+            self.ratio_test = 100 - self.ratio_test
 
     def get_percent(self, data):
         # calculate the correct percent of data
