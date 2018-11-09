@@ -10,6 +10,7 @@ class Calculaor():
 
     def initialize(self, study_scale, converger_condition, fileManager):
         # initialize essential variable
+        self.done = False
         self.study_scale = study_scale
         self.converger_condition = converger_condition
         self.progress_percent = 0
@@ -76,7 +77,7 @@ class Calculaor():
             tmp_result = 2
 
         # revise the wrong weight value
-        if tmp_result != self.train_data[now][2]:
+        if tmp_result != self.train_data[now][2] and self.done == False:
             changed = True
             tmp_m = [0, 0]
             tmp_ro = [0, 0]
@@ -166,6 +167,10 @@ class Calculaor():
         # calculate train and test correct ratio
         self.ratio_train = self.get_percent(self.train_data)
         self.ratio_test = self.get_percent(self.test_data)
+        if self.ratio_train == 0:
+            self.done = True
+            self.ratio_train = 100
+            self.ratio_test = 100 - self.ratio_test
 
     def get_percent(self, data):
         # calculate the correct percent of data
