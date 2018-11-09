@@ -78,13 +78,15 @@ class Calculaor():
         # revise the wrong weight value
         if tmp_result != self.train_data[now][2]:
             changed = True
+            tmp_m = [0, 0]
+            tmp_ro = [0, 0]
             if tmp_result == 1:
                 ################## weight, m, ro, theta gradient decent
                 tmp_w[0] = tmp_w[0] + (self.study_scale * (-1 - F_of_X))
                 for k in range(self.k):
                     tmp_w[k+1] = tmp_w[k+1] + (self.study_scale * (-1 - F_of_X) * tmp_x[k+1])
-                    self.rbfn_point[k].set_m(self.rbfn_point[k].m + ((self.study_scale * (-1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)) / self.rbfn_point[k].ro**2))
-                    self.rbfn_point[k].set_ro(self.rbfn_point[k].ro + (self.study_scale * (-1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.linalg.norm(np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)**2) / self.rbfn_point[k].ro**3))
+                    tmp_m[k] =self.rbfn_point[k].m + ((self.study_scale * (-1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)) / self.rbfn_point[k].ro**2)
+                    tmp_ro[k] = self.rbfn_point[k].ro + (self.study_scale * (-1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.linalg.norm(np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)**2) / self.rbfn_point[k].ro**3)
                 
             elif (tmp_result == 2) and (self.train_data[now][2] == 0):
                 pass
@@ -93,12 +95,15 @@ class Calculaor():
                 tmp_w[0] = tmp_w[0] + (self.study_scale * (1 - F_of_X))
                 for k in range(self.k):
                     tmp_w[k+1] = tmp_w[k+1] + (self.study_scale * (1 - F_of_X) * tmp_x[k+1])
-                    self.rbfn_point[k].set_m(self.rbfn_point[k].m + ((self.study_scale * (1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)) / self.rbfn_point[k].ro**2))
-                    self.rbfn_point[k].set_ro(self.rbfn_point[k].ro + (self.study_scale * (1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.linalg.norm(np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)**2) / self.rbfn_point[k].ro**3))
+                    tmp_m[k] = self.rbfn_point[k].m + ((self.study_scale * (1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)) / self.rbfn_point[k].ro**2)
+                    tmp_ro[k] = self.rbfn_point[k].ro + (self.study_scale * (1 - F_of_X) * tmp_w[k+1] * tmp_x[k+1] * (np.linalg.norm(np.array([self.train_data[now][0:2]]) - self.rbfn_point[k].m)**2) / self.rbfn_point[k].ro**3)
 
             self.w0 = tmp_w[0]
             self.w1 = tmp_w[1]
             self.w2 = tmp_w[2]
+            for k in range(self.k):
+                self.rbfn_point[k].set_m(tmp_m[k])
+                self.rbfn_point[k].set_ro(tmp_ro[k])
 
         # update value needed by GUI
         if changed:
