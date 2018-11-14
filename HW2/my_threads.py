@@ -42,7 +42,7 @@ class DisplayThread(QThread):
     ratio = pyqtSignal(str, str)
     weight = pyqtSignal(str, str, str)
     progress = pyqtSignal(int)
-    rbfn = pyqtSignal(str)
+    rbfn = pyqtSignal(str, str)
 
     def __init__(self, main, calculator):
         QThread.__init__(self)
@@ -57,9 +57,10 @@ class DisplayThread(QThread):
             w1 = str(round(self.calculator.w1, 5))
             w2 = str(round(self.calculator.w2, 5))
             k = str(self.calculator.k)
+            RMSE = str(self.calculator.RMSE)
 
             # send the event to Main Thread to update the GUI label value
             self.weight.emit(w0, w1, w2)
-            self.rbfn.emit(k)
+            self.rbfn.emit(k, RMSE)
             self.progress.emit(self.calculator.progress_percent)
             time.sleep(0.0000000000000000000000000000000000000000000001)

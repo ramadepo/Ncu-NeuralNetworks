@@ -122,8 +122,9 @@ class Main(QMainWindow, window.Ui_MainWindow):
         # set the value of GUI progress bar
         self.progressBar_progress.setValue(progress)
 
-    def set_rbfn(self, k):
+    def set_rbfn(self, k, RMSE):
         self.label_kValue.setText(k)
+        self.label_RMSEValue.setText(RMSE)
 
 
 # program executed entry

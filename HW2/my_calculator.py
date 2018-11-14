@@ -17,6 +17,7 @@ class Calculaor():
         self.times = 0
         self.ratio_train = 0
         self.ratio_test = 0
+        self.RMSE = 0
         self.w0 = random.uniform(-1, 1)
         self.w1 = random.uniform(-1, 1)
         self.w2 = random.uniform(-1, 1)
@@ -150,6 +151,7 @@ class Calculaor():
 
             self.transfer_data(self.train_picture)
             self.transfer_data(self.test_picture)
+        
         self.progress_percent = int(i * 100 / self.converger_condition)
 
         # calculate correct ratio every 100 times
@@ -165,8 +167,8 @@ class Calculaor():
 
     def ratio_calculate(self):
         # calculate train and test correct ratio
-        self.ratio_train = self.get_percent(self.train_data)
-        self.ratio_test = self.get_percent(self.test_data)
+        self.ratio_test = self.get_percent_RMSE(self.test_data)
+        self.ratio_train = self.get_percent_RMSE(self.train_data)
         if self.ratio_train == 0:
             self.done = True
             self.ratio_train = 100
@@ -175,12 +177,13 @@ class Calculaor():
             self.ratio_train = 100 - self.ratio_train
             self.ratio_test = 100 - self.ratio_test
 
-    def get_percent(self, data):
+    def get_percent_RMSE(self, data):
         # calculate the correct percent of data
         if len(data) < 1:
             return 0
         tmp_w = np.array([self.w0, self.w1, self.w2])
         right = 0
+        error = 0
         for i in data:
             tmp_x = np.array(i[0:2])
             tmp_x = np.array([-1, self.rbfn_point[0].get_y(tmp_x), self.rbfn_point[1].get_y(tmp_x)])
@@ -188,6 +191,14 @@ class Calculaor():
                 right += 1
             elif np.dot(tmp_w, tmp_x) <= 0 and (i[2] == 0 or i[2] == 2):
                 right += 1
+            else:
+                error += 1
+        error /= len(data)
+        if error == 1:
+            error = 0
+        self.RMSE = error**(1/2)
+
+
         return (100 * right) / len(data)
 
     def transfer_data(self, picture):
