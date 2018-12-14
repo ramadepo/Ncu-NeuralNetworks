@@ -9,13 +9,15 @@ class Calculaor():
 
     def initialize(self, converger_condition, fileManager):
         # initialize essential variable
-        self.study_scale = 0
         self.converger_condition = converger_condition
         self.progress_percent = 0
         self.times = 0
         self.train1 = fileManager.train1
         self.train2 = fileManager.train2
         self.data_merge()
+        self.matrix = self.construct_matrix(fileManager.x_min, fileManager.x_max, fileManager.y_min, fileManager.y_max)
+        self.transfer_matrix()
+        self.last_winner = [-1, -1]
 
     def data_merge(self):
         # combine result 1 and 2 data then shuffle
@@ -34,18 +36,78 @@ class Calculaor():
             self.train_data.append(tmp)
         shuffle(self.train_data)
 
+    def construct_matrix(self, x_min, x_max, y_min, y_max):
+        matrix = []
+        for i in range(10):
+            matrix.append([0,0,0,0,0,0,0,0,0,0])
+        for i in range(10):
+            for j in range(10):
+                x = random.uniform(x_min, x_max)
+                y = random.uniform(y_min, y_max)
+                matrix[i][j] = np.array([x, y])
+        return matrix
+
     def calculate(self, i):
         now = i % len(self.train_data)
+        # calculate the relationship with matrix and data to build SOM
+        x = self.train_data[now][0]
+        y = self.train_data[now][1]
+        target = np.array([x, y])
+        winner = self.get_winner(target)
+        self.winner_update(winner[0], winner[1], target, i)
 
+        self.calculate_bottom(i)
 
+    def winner_update(self, win_i, win_j, target, i):
+        if i <= 1000:
+            study_rate = 0.9 * (1 - (i/1000))
+        else:
+            study_rate = 0.01
+        if i <= 8000:
+            size = 6
+        elif i <= 16000:
+            size = 5
+        elif i <= 24000:
+            size = 4
+        elif i <= 32000:
+            size = 3
+        elif i <= 40000:
+            size = 2
+        else:
+            size = 1
+
+        for i in range(10):
+            for j in range(10):
+                if abs(win_i-i) <= size and abs(win_j-j) <= size:
+                    self.matrix[i][j] = self.matrix[i][j] + (study_rate * (target - self.matrix[i][j]))
+
+    def get_winner(self, target):
+        winner = [-1, -1]
+        win_distance = 9999
+        for i in range(10):
+            for j in range(10):
+                distance = np.linalg.norm(self.matrix[i][j] - target)
+                if distance < win_distance:
+                    if [i, j] != self.last_winner:
+                        win_distance = distance
+                        winner = [i, j]
+        self.last_winner = winner
+        return winner
+
+    def after_calculate(self):
+        self.transfer_matrix()
+
+    def calculate_bottom(self, i):
         # update value needed by GUI
         self.progress_percent = int(i * 100 / self.converger_condition)
 
         # every 100 times
         self.times += 1
         if self.times%100 == 0:
-            pass
+            self.transfer_matrix()
+        # Kohonen: shuffle in every learning loop
+        if self.times%len(self.train_data) == 0:
+            shuffle(self.train_data)
 
-    def after_calculate(self):
-        pass
-
+    def transfer_matrix(self):
+        self.train_picture.get_matrix(self.matrix)

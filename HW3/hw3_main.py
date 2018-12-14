@@ -43,7 +43,11 @@ class Main(QMainWindow, window.Ui_MainWindow):
                 self.pushButton.setText("Start")
         else:
             # input data is needed
-            if len(self.lineEdit_convergeCondition.text()) < 1:
+            if len(self.lineEdit_topologySizeI.text()) < 1:
+                self.add_log("請輸入拓撲大小")
+            elif len(self.lineEdit_topologySizeJ.text()) < 1:
+                self.add_log("請輸入拓撲大小")
+            elif len(self.lineEdit_convergeCondition.text()) < 1:
                 self.add_log("請輸入收斂條件(迭代次數)")
             else:
                 self.pushButton.setText("Wait...")
@@ -78,6 +82,15 @@ class Main(QMainWindow, window.Ui_MainWindow):
             self.load_file_data()
             self.train_picture.subplot("Data")
             self.train_picture.draw()
+            self.suggestion_loop()
+
+    def suggestion_loop(self):
+        if len(self.lineEdit_topologySizeI.text()) < 1:
+            self.lineEdit_topologySizeI.setText("10")
+        if len(self.lineEdit_topologySizeJ.text()) < 1:
+            self.lineEdit_topologySizeJ.setText("10")
+        suggestion = str(int(self.lineEdit_topologySizeI.text()) * int(self.lineEdit_topologySizeJ.text()) * 500)
+        self.label_suggestionCount.setText(suggestion)
 
     def add_log(self, log):
         # add log the GUI console window

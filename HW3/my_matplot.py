@@ -24,17 +24,16 @@ class PlotCanvas(FigureCanvas):
         self.xs2 = data2["xs"]
         self.ys1 = data1["ys"]
         self.ys2 = data2["ys"]
-        self.x_min = x_min - 1
-        self.x_max = x_max + 1
-        self.y_min = y_min - 1
-        self.y_max = y_max + 1
+        self.x_min = x_min - 0.1
+        self.x_max = x_max + 0.1
+        self.y_min = y_min - 0.1
+        self.y_max = y_max + 0.1
 
     def plot(self, plot_title):
         # plot the result line
         self.subplot(plot_title)
-        x = np.linspace(self.x_min, self.x_max, 2)
-        y = ((self.w1 * x * (-1)) + self.w0) / self.w2
-        self.axes.plot(x, y, 'r')
+        # plot the connection between elements in matrix
+        self.plot_connection()
         self.changed = False
 
     def subplot(self, plot_title):
@@ -46,3 +45,19 @@ class PlotCanvas(FigureCanvas):
         self.axes.plot(self.xs1, self.ys1, '.')
         self.axes.plot(self.xs2, self.ys2, 'x')
         self.changed = False
+
+    def plot_connection(self):
+        for i in range(9):
+            for j in range(10):
+                x = [self.matrix[i][j][0], self.matrix[i+1][j][0]]
+                y = [self.matrix[i][j][1], self.matrix[i+1][j][1]]
+                self.axes.plot(x, y, color='lightsteelblue', marker='.')
+        for j in range(9):
+            for i in range(10):
+                x = [self.matrix[i][j][0], self.matrix[i][j+1][0]]
+                y = [self.matrix[i][j][1], self.matrix[i][j+1][1]]
+                self.axes.plot(x, y, color='lightsteelblue', marker='.')
+    
+    def get_matrix(self, matrix):
+        self.matrix = matrix
+        self.changed = True
