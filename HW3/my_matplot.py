@@ -24,10 +24,10 @@ class PlotCanvas(FigureCanvas):
         self.xs2 = data2["xs"]
         self.ys1 = data1["ys"]
         self.ys2 = data2["ys"]
-        self.x_min = x_min - ((x_max - x_min) / 20)
-        self.x_max = x_max + ((x_max - x_min) / 20)
-        self.y_min = y_min - ((y_max - y_min) / 20)
-        self.y_max = y_max + ((y_max - y_min) / 20)
+        self.x_min = x_min - 1
+        self.x_max = x_max + 1
+        self.y_min = y_min - 1
+        self.y_max = y_max + 1
 
     def get_weight_interval(self, w0, w1, w2):
         # set the result line weight
@@ -52,3 +52,4 @@ class PlotCanvas(FigureCanvas):
         self.axes.set_ylim(self.y_min, self.y_max)
         self.axes.plot(self.xs1, self.ys1, '.')
         self.axes.plot(self.xs2, self.ys2, 'x')
+        self.changed = False

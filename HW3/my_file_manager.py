@@ -63,7 +63,7 @@ class FileManager():
     def devide_train_test(self, train, test, tmp):
         # devide data to train and test
         for i in range(len(tmp["results"])):
-            if i+1 < (len(tmp["results"])/3):
+            if i <= (len(tmp["results"])/3):
                 test["xs"].append(tmp["xs"][i])
                 test["ys"].append(tmp["ys"][i])
                 test["results"].append(tmp["results"][i])
