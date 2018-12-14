@@ -12,7 +12,7 @@ class FileManager():
     def detect_files(self):
         # find all file in Dataset directory
         self.file_list = []
-        for i in os.listdir("./DataSet"):
+        for i in os.listdir("./DataSet/SOM_dataset"):
             if i.endswith(".txt"):
                 self.file_list.append(i)
         self.file_list.sort()
@@ -26,7 +26,7 @@ class FileManager():
         tmp1 = {"xs": [], "ys": [], "results": []}
         tmp2 = {"xs": [], "ys": [], "results": []}
 
-        file = open('./DataSet/'+filename, 'r').read()
+        file = open('./DataSet/SOM_dataset/'+filename, 'r').read()
         lines = file.split('\n')
         shuffle(lines)
         for line in lines:
@@ -53,21 +53,14 @@ class FileManager():
 
     def divide_data(self, tmp1, tmp2):
         # initailize the variable to store initial data
-        self.test1 = {"xs": [], "ys": [], "results": []}
         self.train1 = {"xs": [], "ys": [], "results": []}
-        self.test2 = {"xs": [], "ys": [], "results": []}
         self.train2 = {"xs": [], "ys": [], "results": []}
-        self.devide_train_test(self.train1, self.test1, tmp1)
-        self.devide_train_test(self.train2, self.test2, tmp2)
+        self.store_train(self.train1, tmp1)
+        self.store_train(self.train2, tmp2)
 
-    def devide_train_test(self, train, test, tmp):
-        # devide data to train and test
+    def store_train(self, train, tmp):
+        # store data to train
         for i in range(len(tmp["results"])):
-            if i <= (len(tmp["results"])/3):
-                test["xs"].append(tmp["xs"][i])
-                test["ys"].append(tmp["ys"][i])
-                test["results"].append(tmp["results"][i])
-            else:
-                train["xs"].append(tmp["xs"][i])
-                train["ys"].append(tmp["ys"][i])
-                train["results"].append(tmp["results"][i])
+            train["xs"].append(tmp["xs"][i])
+            train["ys"].append(tmp["ys"][i])
+            train["results"].append(tmp["results"][i])

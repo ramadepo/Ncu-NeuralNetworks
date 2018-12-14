@@ -29,13 +29,6 @@ class PlotCanvas(FigureCanvas):
         self.y_min = y_min - 1
         self.y_max = y_max + 1
 
-    def get_weight_interval(self, w0, w1, w2):
-        # set the result line weight
-        self.w0 = w0
-        self.w1 = w1
-        self.w2 = w2
-        self.changed = True
-
     def plot(self, plot_title):
         # plot the result line
         self.subplot(plot_title)

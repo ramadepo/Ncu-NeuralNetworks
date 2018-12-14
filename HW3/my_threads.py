@@ -19,10 +19,9 @@ class PlotThread(QThread):
 class CalculateThread(QThread):
     log = pyqtSignal(str)
 
-    def __init__(self, main, calculator):
+    def __init__(self, calculator):
         QThread.__init__(self)
         self.calculator = calculator
-        self.main = main
 
     def run(self):
         for i in range(self.calculator.converger_condition):
@@ -39,24 +38,14 @@ class CalculateThread(QThread):
 
 class DisplayThread(QThread):
     # initialize signal
-    ratio = pyqtSignal(str, str)
-    weight = pyqtSignal(str, str, str)
     progress = pyqtSignal(int)
 
-    def __init__(self, main, calculator):
+    def __init__(self, calculator):
         QThread.__init__(self)
-        self.main = main
         self.calculator = calculator
 
     def run(self):
         while True:
-            self.ratio.emit(str(int(self.calculator.ratio_train)) +
-                            "%", str(int(self.calculator.ratio_test)) + "%")
-            w0 = str(round(self.calculator.w0, 5))
-            w1 = str(round(self.calculator.w1, 5))
-            w2 = str(round(self.calculator.w2, 5))
-
             # send the event to Main Thread to update the GUI label value
-            self.weight.emit(w0, w1, w2)
             self.progress.emit(self.calculator.progress_percent)
             time.sleep(0.0000000000000000000000000000000000000000000001)
