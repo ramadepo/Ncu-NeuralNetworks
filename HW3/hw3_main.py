@@ -20,7 +20,7 @@ class Main(QMainWindow, window.Ui_MainWindow):
 
         self.fileManager = FileManager(self.comboBox_filename)
 
-        self.train_picture = PlotCanvas(self.plot_trainingData, 6, 6, 100)
+        self.train_picture = PlotCanvas(self.plot_trainingData, self.plot_trainingData_preview, 6, 6, 2.5, 2.5, 100)
         self.plot_train_thread = PlotThread(
             self.train_picture, "Data")
         self.preview_picture()
@@ -57,7 +57,7 @@ class Main(QMainWindow, window.Ui_MainWindow):
         # turn on the thread to calculate and draw
         self.started = True
         self.add_log("開始計算...")
-        self.calculator.initialize(int(self.lineEdit_convergeCondition.text()), self.fileManager)
+        self.calculator.initialize(int(self.lineEdit_convergeCondition.text()), int(self.lineEdit_topologySizeI.text()), int(self.lineEdit_topologySizeJ.text()), self.fileManager)
         self.plot_train_thread.start()
         self.calculate_thread.start()
         self.display_thread.start()

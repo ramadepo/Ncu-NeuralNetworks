@@ -7,9 +7,11 @@ class Calculaor():
     def __init__(self, train_picture):
         self.train_picture = train_picture
 
-    def initialize(self, converger_condition, fileManager):
+    def initialize(self, converger_condition, topology_size_i, topology_size_j, fileManager):
         # initialize essential variable
         self.converger_condition = converger_condition
+        self.topology_size_i = topology_size_i
+        self.topology_size_j = topology_size_j
         self.progress_percent = 0
         self.times = 0
         self.train1 = fileManager.train1
@@ -38,10 +40,10 @@ class Calculaor():
 
     def construct_matrix(self, x_min, x_max, y_min, y_max):
         matrix = []
-        for i in range(10):
-            matrix.append([0,0,0,0,0,0,0,0,0,0])
-        for i in range(10):
-            for j in range(10):
+        for i in range(self.topology_size_i):
+            matrix.append([0] * self.topology_size_j)
+        for i in range(self.topology_size_i):
+            for j in range(self.topology_size_j):
                 x = random.uniform(x_min, x_max)
                 y = random.uniform(y_min, y_max)
                 matrix[i][j] = np.array([x, y])
@@ -63,29 +65,18 @@ class Calculaor():
             study_rate = 0.9 * (1 - (i/1000))
         else:
             study_rate = 0.01
-        if i <= 8000:
-            size = 6
-        elif i <= 16000:
-            size = 5
-        elif i <= 24000:
-            size = 4
-        elif i <= 32000:
-            size = 3
-        elif i <= 40000:
-            size = 2
-        else:
-            size = 1
+        size = max(int(max(self.topology_size_i, self.topology_size_j)/2) - int(i/1000), 1)
 
-        for i in range(10):
-            for j in range(10):
+        for i in range(self.topology_size_i):
+            for j in range(self.topology_size_j):
                 if abs(win_i-i) <= size and abs(win_j-j) <= size:
                     self.matrix[i][j] = self.matrix[i][j] + (study_rate * (target - self.matrix[i][j]))
 
     def get_winner(self, target):
         winner = [-1, -1]
         win_distance = 9999
-        for i in range(10):
-            for j in range(10):
+        for i in range(self.topology_size_i):
+            for j in range(self.topology_size_j):
                 distance = np.linalg.norm(self.matrix[i][j] - target)
                 if distance < win_distance:
                     if [i, j] != self.last_winner:
@@ -110,4 +101,4 @@ class Calculaor():
             shuffle(self.train_data)
 
     def transfer_matrix(self):
-        self.train_picture.get_matrix(self.matrix)
+        self.train_picture.get_matrix(self.matrix, self.topology_size_i, self.topology_size_j)

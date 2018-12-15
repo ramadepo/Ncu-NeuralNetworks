@@ -13,6 +13,7 @@ class PlotThread(QThread):
             if self.picture.changed:
                 self.picture.plot(self.name)
                 self.picture.draw()
+                self.picture.preview_picture.draw()
             time.sleep(0.0000000000000000000000000000000000000000000001)
 
 
