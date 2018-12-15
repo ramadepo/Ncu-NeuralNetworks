@@ -249,13 +249,13 @@ class Ui_MainWindow(object):
         self.label_filename.setText(_translate("MainWindow", "檔名"))
         self.label_convergeCondition.setText(_translate("MainWindow", "收斂條件(迭代次數)"))
         self.label_hint_convergeCondition.setText(_translate("MainWindow", "次"))
-        self.label_topologySize.setText(_translate("MainWindow", "拓撲大小"))
+        self.label_topologySize.setText(_translate("MainWindow", "拓蹼大小"))
         self.lineEdit_topologySizeI.setText(_translate("MainWindow", "10"))
         self.label_topologySize_2.setText(_translate("MainWindow", "*"))
         self.lineEdit_topologySizeJ.setText(_translate("MainWindow", "10"))
         self.label_suggestion.setText(_translate("MainWindow", "Kohonen建議迭代次數"))
         self.label_suggestionCount.setText(_translate("MainWindow", "50000"))
-        self.label_preview.setText(_translate("MainWindow", "拓撲預覽"))
+        self.label_preview.setText(_translate("MainWindow", "拓蹼預覽"))
 
 
 if __name__ == "__main__":

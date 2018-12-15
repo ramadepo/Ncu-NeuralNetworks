@@ -305,7 +305,7 @@ background-color: rgb(80, 80, 80);</string>
      <string notr="true">color: rgb(162, 162, 162);</string>
     </property>
     <property name="text">
-     <string>拓撲大小</string>
+     <string>拓蹼大小</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -488,7 +488,7 @@ background-color: rgb(80, 80, 80);</string>
      <string notr="true">color: rgb(162, 162, 162);</string>
     </property>
     <property name="text">
-     <string>拓撲預覽</string>
+     <string>拓蹼預覽</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
