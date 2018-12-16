@@ -205,6 +205,7 @@ class Calculaor():
         # send the line weight to picture drawer
         picture.get_weight_interval(self.w0, self.w1, self.w2)
 
+# For neural active function : RBFN 
 class RBFN_Point():
     def __init__(self, fileManager):
         self.m = np.array([random.uniform(fileManager.x_min, fileManager.x_max), random.uniform(fileManager.y_min, fileManager.y_max)])
@@ -217,6 +218,7 @@ class RBFN_Point():
         self.ro = ro
     
     def get_y(self, x):
+        # f(x) = -1 * distance^2 / (2 * σ^2)
         dist = np.linalg.norm(self.m - x)
         return  np.exp(float(-1 * (dist**2) / (2 * self.ro**2)))
 
