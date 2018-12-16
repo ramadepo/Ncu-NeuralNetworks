@@ -39,6 +39,7 @@ class Calculaor():
         shuffle(self.train_data)
 
     def construct_matrix(self, x_min, x_max, y_min, y_max):
+        # build the topology point as a metrix and random there position in space
         matrix = []
         for i in range(self.topology_size_i):
             matrix.append([0] * self.topology_size_j)
@@ -61,6 +62,7 @@ class Calculaor():
         self.calculate_bottom(i)
 
     def winner_update(self, win_i, win_j, target, i):
+        # update the winner and it's neighbour point
         if i <= 1000:
             study_rate = 0.9 * (1 - (i/1000))
         else:
@@ -73,6 +75,7 @@ class Calculaor():
                     self.matrix[i][j] = self.matrix[i][j] + (study_rate * (target - self.matrix[i][j]))
 
     def get_winner(self, target):
+        # find the winner point (the closest one to the target data point)
         winner = [-1, -1]
         win_distance = 9999
         for i in range(self.topology_size_i):
@@ -101,4 +104,5 @@ class Calculaor():
             shuffle(self.train_data)
 
     def transfer_matrix(self):
+        # transfer the topology to plotter
         self.train_picture.get_matrix(self.matrix, self.topology_size_i, self.topology_size_j)

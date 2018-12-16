@@ -49,6 +49,7 @@ class PlotCanvas(FigureCanvas):
         self.changed = False
 
     def plot_connection(self):
+        # plot the topology, total (i-1)*j vertical line and (j-1)*i horizontal line
         for i in range(self.topology_size_i-1):
             for j in range(self.topology_size_j):
                 x = [self.matrix[i][j][0], self.matrix[i+1][j][0]]
@@ -61,11 +62,13 @@ class PlotCanvas(FigureCanvas):
                 self.axes.plot(x, y, color='lightsteelblue', marker='.')
     
     def get_matrix(self, matrix, topology_size_i, topology_size_j):
+        # get the topology point from calculator passively
         self.matrix = matrix
         self.topology_size_i = topology_size_i
         self.topology_size_j = topology_size_j
         self.changed = True
 
+# For left bottom picture, only draw the topology graph
 class PlotPreview(FigureCanvas):
     def __init__(self, parent, width, height, dpi):
         # initialize the object for plotting picture
@@ -83,12 +86,14 @@ class PlotPreview(FigureCanvas):
         self.plot_connection(matrix, topology_size_i, topology_size_j)
 
     def subplot(self, title, x_min, x_max, y_min, y_max):
+        # set the x_min, x_max, y_min, y_max
         self.axes.clear()
         self.axes.set_title(title)
         self.axes.set_xlim(x_min, x_max)
         self.axes.set_ylim(y_min, y_max)
     
     def plot_connection(self, matrix, topology_size_i, topology_size_j):
+        # plot the topology, total (i-1)*j vertical line and (j-1)*i horizontal line
         for i in range(topology_size_i-1):
             for j in range(topology_size_j):
                 x = [matrix[i][j][0], matrix[i+1][j][0]]
